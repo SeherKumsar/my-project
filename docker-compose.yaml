@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  client1:
+  client-app:
     build: ./client1
     container_name: my-project-app
     volumes:
-      - ./client1:/app
+      - ./client1:/client-app
     environment:
       - name=6000
     ports:
@@ -13,15 +13,44 @@ services:
     networks:
       - my-network2
     depends_on:
+      - database-app
+      - rabbitmq
+
+  database-app:
+    build: ./database-app
+    container_name: database-app
+    volumes:
+      - ./database-app:/app
+    environment:
+      - name=6002
+    ports:
+      - "6002:6002"
+    networks:
+      - my-network2
+    depends_on:
       - postgresql-db
-    
+
+  provider-app:
+    build: ./provider-app
+    container_name: provider-app
+    volumes:
+      - ./provider-app:/app
+    environment:
+      - name=6001
+    ports:
+      - "6001:6001"
+    networks:
+      - my-network2
+    depends_on:
+      - rabbitmq
+      - database-app
+
   postgresql-db:
     image: postgres:10
-
     environment:
       POSTGRES_USER: user2
       POSTGRES_PASSWORD: P4ssword
-      POSTGRES_DB: postgresql-database # postgresql-database-server
+      POSTGRES_DB: postgresql-database
     ports:
       - "5436:5432"
     networks:
