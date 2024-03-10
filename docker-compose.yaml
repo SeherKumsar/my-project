@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  client1:
+    build: ./client1
     container_name: my-project-app
     volumes:
-      - .:/app
+      - ./client1:/app
     environment:
       - name=6000
     ports:
@@ -17,7 +17,7 @@ services:
     
   postgresql-db:
     image: postgres:10
-    # container_name: my-project-db
+
     environment:
       POSTGRES_USER: user2
       POSTGRES_PASSWORD: P4ssword
@@ -27,6 +27,18 @@ services:
     networks:
       - my-network2
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: "rabbitmq2"
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - my-network2
+
 networks:
   my-network2:
-    
+    driver: bridge
