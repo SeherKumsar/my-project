@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: my-project-app
+    volumes:
+      - .:/app
+    environment:
+      - name=6000
+    ports:
+      - "6000:6000"
+    networks:
+      - my-network2
+    depends_on:
+      - postgresql-db
+    
+  postgresql-db:
+    image: postgres:10
+    # container_name: my-project-db
+    environment:
+      POSTGRES_USER: user2
+      POSTGRES_PASSWORD: P4ssword
+      POSTGRES_DB: postgresql-database # postgresql-database-server
+    ports:
+      - "5436:5432"
+    networks:
+      - my-network2
+
+networks:
+  my-network2:
+    
