@@ -9,7 +9,7 @@ services:
     environment:
       - name=6000
     ports:
-      - "6000:6000"
+      - "9229:9229"
     networks:
       - my-network2
     depends_on:
